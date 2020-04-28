@@ -10,3 +10,6 @@ router_port: 8081
 ssl: false
 # Path to the certificate file for SSL
 cert: server.pem
+# Type of integrity protections/checking to use for validating messages to and from the router
+# Can be: {off, crc32, md5, sha1}
+integrity: off
