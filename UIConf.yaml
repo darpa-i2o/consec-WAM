@@ -1,0 +1,12 @@
+# Hostname to bind to for the HTTP UI server
+host: 127.0.0.1
+# UI HTTP port
+listen_port: 8080
+# Hostname to connect to the WAM message router
+router_host: 127.0.0.1
+# WAM message router port
+router_port: 8081
+# If the UI server should use SSL or not
+ssl: false
+# Path to the certificate file for SSL
+cert: server.pem
