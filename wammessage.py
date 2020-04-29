@@ -3,9 +3,23 @@
 import threading
 import json
 import zlib
+import hashlib
+
+def md5_if(string):
+    '''Function to compute a MD5 integrity check on a passed string'''
+    return hashlib.md5(string.encode('utf-8')).hexdigest()
+
+def sha1_if(string):
+    '''Function to compute a SHA1 integrity check on a passed string'''
+    return hashlib.sha1(string.encode('utf-8')).hexdigest()
+
+def sha2_if(string):
+    '''Function to compute a SHA2 integrity check on a passed string'''
+    return hashlib.sha256(string.encode('utf-8')).hexdigest()
+
 
 def crc32_if(string):
-    '''Function to compute a string integrity check on a passed string'''
+    '''Function to compute a CRC32 integrity check on a passed string'''
     return str(zlib.crc32(string.encode('utf-8')))
 
 class WAMMessage:

@@ -7,8 +7,6 @@
 import time
 import yaml
 import json
-import hashlib
-from zlib import crc32
 import threading
 import http.server
 import socketserver
