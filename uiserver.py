@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# (C) 2020 Harrell Corp
+# This server both spawns a new thread to host HTTP(S) connections to both display the sensor reading as well as provide the human operator
+# a button to click to send a "whack" message to the whactuator via the message router
+
 import time
 import yaml
 import json
