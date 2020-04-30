@@ -3,6 +3,8 @@
 import threading
 import json
 import zlib
+import socket
+import queue
 import hashlib
 
 def md5_if(string):
@@ -59,3 +61,44 @@ class WAMMessage:
         if (self.integrity):
             msg['integrity'] = self.integrityfunc(self.fro + self.to + self.message)
         return json.dumps(msg)
+
+class MessageClient:
+    '''Class to send messages to a specified destination'''
+
+    def __init__(self, host = '127.0.0.1', port = 8090):
+        '''Constructs a client to send messages'''
+        self.host = host
+        self.port = port
+
+    def send(self, msg):
+        '''Sends a message'''
+        mb = msg.serialize().encode('utf-8')
+        s = socket.socket(family = socket.AF_INET, type = socket.SOCK_DGRAM)
+        s.sendto(mb, (self.host, self.port))
+
+class MessageServer(threading.Thread):
+    '''Class to receive messages in a new thread and add them to a specified queue'''
+    
+    def __init__(self, queue, integrity = False, integrityfunc = None, host = '127.0.0.1', port = 8090):
+        '''Initializes a server with hostname and port to listen on'''
+        self.host = host
+        self.port = port
+        self.queue = queue
+        self.integrity = integrity
+        self.integrityfunc = integrityfunc
+        self.buffersz = 1024
+        threading.Thread.__init__(self)
+
+    def run(self):
+        '''Starts the server in a new thread'''
+        s = socket.socket(family = socket.AF_INET, type = socket.SOCK_DGRAM)
+        s.bind((self.host, self.port))
+        while(True):
+            mb = s.recvfrom(self.buffersz)
+            m = WAMMessage(integrity = self.integrity, integrityfunc = self.integrityfunc)
+            m.deserialize(mb[0].decode('utf-8'))
+            self.queue.put(m)
+            print("Got message from: " + m.fro)
+            if (m.message == "SHUTDOWN"):
+                break
+        s.close()
