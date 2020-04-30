@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 from http.server import BaseHTTPRequestHandler
+import queue
 
 sensor_reading = "NO MOLE"
+click_queue = queue.Queue()
 
 class UIRequestHandler(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -18,3 +20,9 @@ class UIRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self._set_headers()
         self.wfile.write(self._wam_respond())
+
+    def do_POST(self):
+        click_queue.put('CLICK')
+        self.send_response(303)
+        self.send_header('Location', '/')
+        self.end_headers()

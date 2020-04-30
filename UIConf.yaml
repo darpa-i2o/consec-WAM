@@ -1,7 +1,9 @@
 # Hostname to bind to for the HTTP UI server
 host: 127.0.0.1
 # UI HTTP port
-listen_port: 8080
+http_listen_port: 8080
+# UI message listen port
+message_listen_port: 8091
 # Hostname to connect to the WAM message router
 router_host: 127.0.0.1
 # WAM message router port
