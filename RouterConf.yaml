@@ -1,0 +1,23 @@
+# Hostname to bind to for the server
+host: 127.0.0.1
+# Message listen port
+message_listen_port: 8081
+
+# Hostname to connect to the UI
+ui_host: 127.0.0.1
+# UI port
+ui_port: 8091
+
+# Hostname to connect to the Whactuator
+whac_host: 127.0.0.1
+# Whactuator port
+whac_port: 8092
+
+# Type of integrity protections/checking to use for validating messages to and from the router
+# Can be: {off, crc32, md5, sha1, sha2}
+integrity: off
+
+# Boolean for if a debug console should be enabled
+debug: true
+# Port to listen for telnet debug connections
+debug_port: 9999

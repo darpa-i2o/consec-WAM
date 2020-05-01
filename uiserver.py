@@ -26,18 +26,28 @@ recv_queue = queue.Queue()
 
 fro = 'UI'
 
-if (conf_data['integrity'] == 'off' or not conf_data['integrity']):
-    mc = wammessage.MessageClient(host = conf_data['router_host'], port = conf_data['router_port'])
-    ms = wammessage.MessageServer(recv_queue, host = conf_data['host'], port = conf_data['message_listen_port'])
-#elif (conf_data['integrity'] == 'crc32'):
-#    
-#elif (conf_data['integrity'] == 'md5'):
-#
-#elif (conf_data['integrity'] == 'sha1'):
-#
-else:
-    #print(conf_data['integrity'])
-    sys.exit(-1)
+msg_integrity = False
+msg_integrityfunc = None
+mc = wammessage.MessageClient(host = conf_data['router_host'], port = conf_data['router_port'])
+ms = wammessage.MessageServer(recv_queue, host = conf_data['host'], port = conf_data['message_listen_port'])
+
+if (conf_data['integrity'] == 'crc32'):
+    ms.integrity = True
+    ms.integrityfunc = wammessage.crc32_if
+    msg_integrity = True
+    msg_integrityfunc = wammessage.crc32_if
+
+if (conf_data['integrity'] == 'md5'):
+    ms.integrity = True
+    ms.integrityfunc = wammessage.md5_if
+    msg_integrity = True
+    msg_integrityfunc = wammessage.md5_if
+
+if (conf_data['integrity'] == 'sha1'):
+    ms.integrity = True
+    ms.integrityfunc = wammessage.sha1_if
+    msg_integrity = True
+    msg_integrityfunc = wammessage.sha1_if
 
 # Start a HTTP server on a configuration-defined port
 httpd = socketserver.TCPServer((conf_data['host'], conf_data['http_listen_port']), req_handler)
@@ -47,14 +57,24 @@ if (conf_data['ssl']):
 else:
     print("Starting UI server located at: http://", conf_data['host'], ":", conf_data['http_listen_port'], sep = '')
 uithread = threading.Thread(target=httpd.serve_forever)
-uithread.start()
 
+# Start the HTTP server, and the message server
+uithread.start()
 ms.start()
 
-time.sleep(10)
-if not recv_queue.empty():
-    print("Incoming sensor message!")
-    uihandler.sensor_reading = "MOLE!"
-time.sleep(10)
+# Loop to check queues and process
+while True:
+    if not recv_queue.empty():
+        m = recv_queue.get()
+        print("Incoming message!")
+        uihandler.sensor_reading = m.message 
+        if m.message == 'SHUTDOWN':
+            print("Received shutdown message from router")
+            break
+    if not uihandler.click_queue.empty():
+        c = uihandler.click_queue.get()
+        m = wammessage.WAMMessage(integrity = msg_integrity, integrityfunc = msg_integrityfunc)
+        m.construct_message(fro, 'WHACTUATOR', 'WHACK!')
+        mc.send(m)
+
 httpd.shutdown()
-print("Got" + str(uihandler.click_queue.qsize()) + "clicks!")

@@ -19,7 +19,6 @@ def sha2_if(string):
     '''Function to compute a SHA2 integrity check on a passed string'''
     return hashlib.sha256(string.encode('utf-8')).hexdigest()
 
-
 def crc32_if(string):
     '''Function to compute a CRC32 integrity check on a passed string'''
     return str(zlib.crc32(string.encode('utf-8')))
@@ -98,7 +97,7 @@ class MessageServer(threading.Thread):
             m = WAMMessage(integrity = self.integrity, integrityfunc = self.integrityfunc)
             m.deserialize(mb[0].decode('utf-8'))
             self.queue.put(m)
-            print("Got message from: " + m.fro)
+            #print("Got message from: " + m.fro)
             if (m.message == "SHUTDOWN"):
                 break
         s.close()
