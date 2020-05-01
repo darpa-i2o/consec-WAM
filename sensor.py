@@ -8,13 +8,15 @@ import time
 class Sensor:
     '''A sensor to detect digital moles'''
 
-    def __init__(self, host, port, integrity = False, integrityfunc = None):
+    def __init__(self, host, port, chance, integrity = False, integrityfunc = None):
+        '''Initializes the sensor to be ready to integrate with the rest of the WAM system'''
         self.fro = 'SENSOR'
         self.to = 'UI'
         self.pollint = 5
         self.mole = 'NO MOLE!'
         self.host = host
         self.port = port
+        self.mole_chance = chance
         self.integrity = integrity
         self.integrityfunc = integrityfunc
         self.msg = wammessage.WAMMessage(integrity = self.integrity, integrityfunc = self.integrityfunc)
@@ -22,9 +24,10 @@ class Sensor:
         random.seed()
 
     def start(self):
+        '''Starts the sensor loop of "sensing" for a digital mole'''
         while True:
             rv = random.randint(0, 100)
-            if rv <= conf_data['mole_chance']:
+            if rv <= self.mole_chance:
                 self.mole = 'MOLE!'
             else:
                 self.mole = 'NO MOLE!'
@@ -49,5 +52,5 @@ if __name__ == '__main__':
         msg_integrity = True
         msg_integrityfunc = wammessage.sha1_if
 
-    s = Sensor(conf_data['router_host'], conf_data['router_port'], integrity = msg_integrity, integrityfunc = msg_integrityfunc)
+    s = Sensor(conf_data['router_host'], conf_data['router_port'], conf_data['mole_chance'], integrity = msg_integrity, integrityfunc = msg_integrityfunc)
     s.start()
