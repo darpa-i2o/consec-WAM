@@ -16,3 +16,6 @@ The distributed whack-a-mole is comprised of a few components that together allo
 ## Running whack-a-mole
 1. Configure each component to interact and operate on your specific host system (ensure there are no conflicting ports, etc.)
 2. Run the `./run.sh` script and navigate your browser to the specified localhost port to bring up the UI
+
+## Stopping whack-a-mole
+1. Run the `./shutdown.py` script to cleanly shutdown all the server threads, then kill the `sensor.py`
