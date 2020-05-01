@@ -5,35 +5,49 @@ import random
 import yaml
 import time
 
-random.seed()
-CONF_FILE = "SensorConf.yaml"
+class Sensor:
+    '''A sensor to detect digital moles'''
 
-with open(CONF_FILE) as yf:
-    conf_data = yaml.load(yf)
+    def __init__(self, host, port, integrity = False, integrityfunc = None):
+        self.fro = 'SENSOR'
+        self.to = 'UI'
+        self.pollint = 5
+        self.mole = 'NO MOLE!'
+        self.host = host
+        self.port = port
+        self.integrity = integrity
+        self.integrityfunc = integrityfunc
+        self.msg = wammessage.WAMMessage(integrity = self.integrity, integrityfunc = self.integrityfunc)
+        self.mc = wammessage.MessageClient(host = self.host, port = self.port)
+        random.seed()
 
-fro = 'SENSOR'
-to = 'UI'
-msg_integrity = False
-msg_integrityfunc = None
+    def start(self):
+        while True:
+            rv = random.randint(0, 100)
+            if rv <= conf_data['mole_chance']:
+                self.mole = 'MOLE!'
+            else:
+                self.mole = 'NO MOLE!'
+            self.msg.construct_message(self.fro, self.to, self.mole)
+            self.mc.send(self.msg)
+            time.sleep(self.pollint)
 
-if (conf_data['integrity'] == 'crc32'):
-    msg_integrity = True
-    msg_integrityfunc = wammessage.crc32_if
+if __name__ == '__main__':
+    CONF_FILE = "SensorConf.yaml"
+    
+    with open(CONF_FILE) as yf:
+        conf_data = yaml.load(yf)
+        
+    msg_integrity = False
+    msg_integrityfunc = None
 
-if (conf_data['integrity'] == 'sha1'):
-    msg_integrity = True
-    msg_integrityfunc = wammessage.sha1_if
+    if (conf_data['integrity'] == 'crc32'):
+        msg_integrity = True
+        msg_integrityfunc = wammessage.crc32_if
+        
+    if (conf_data['integrity'] == 'sha1'):
+        msg_integrity = True
+        msg_integrityfunc = wammessage.sha1_if
 
-molem = 'NO MOLE!'
-m = wammessage.WAMMessage(integrity = msg_integrity, integrityfunc = msg_integrityfunc)
-mc = wammessage.MessageClient(host = conf_data['router_host'], port = conf_data['router_port'])
-
-while True:
-    rv = random.randint(0, 100)
-    if rv <= conf_data['mole_chance']:
-        molem = 'MOLE!'
-    else:
-        molem = 'NO MOLE!'
-    m.construct_message(fro, to, molem)
-    mc.send(m)
-    time.sleep(5)
+    s = Sensor(conf_data['router_host'], conf_data['router_port'], integrity = msg_integrity, integrityfunc = msg_integrityfunc)
+    s.start()
