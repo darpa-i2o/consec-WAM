@@ -8,4 +8,4 @@ mole_chance: 10
 
 # Type of integrity protections/checking to use for validating messages to and from the router
 # Can be: {off, crc32, sha1}
-integrity: off
+integrity: crc32

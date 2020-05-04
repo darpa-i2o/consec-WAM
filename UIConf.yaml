@@ -14,4 +14,4 @@ ssl: false
 cert: server.pem
 # Type of integrity protections/checking to use for validating messages to and from the router
 # Can be: {off, crc32, md5, sha1}
-integrity: off
+integrity: crc32
