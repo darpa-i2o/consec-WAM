@@ -66,7 +66,7 @@ ms.start()
 while True:
     if not recv_queue.empty():
         m = recv_queue.get()
-        print("Incoming message!")
+        #print("Incoming message!")
         uihandler.sensor_reading = m.message 
         if m.message == 'SHUTDOWN':
             print("Received shutdown message from router")

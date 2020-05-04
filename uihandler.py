@@ -26,3 +26,7 @@ class UIRequestHandler(BaseHTTPRequestHandler):
         self.send_response(303)
         self.send_header('Location', '/')
         self.end_headers()
+
+    def log_message(self, format, *args):
+        return
+
