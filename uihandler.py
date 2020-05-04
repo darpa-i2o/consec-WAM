@@ -3,7 +3,7 @@
 from http.server import BaseHTTPRequestHandler
 import queue
 
-sensor_reading = "NO MOLE"
+sensor_reading = 'NO MOLE!'
 click_queue = queue.Queue()
 
 class UIRequestHandler(BaseHTTPRequestHandler):
@@ -14,7 +14,7 @@ class UIRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def _wam_respond(self):
-        content = '<html><head><title>WAM</title></head><body><h1>{}</h1><form action="/" method="post"><input type="submit" value="Whack mole!"/></form></body></html>'
+        content = '<html><head><title>WAM</title></head><body><h1>{}</h1><form action="/" method="post"><input type="submit" value="Whack!"/></form></body></html>'
         return content.format(sensor_reading).encode('utf-8')
 
     def do_GET(self):

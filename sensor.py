@@ -8,10 +8,11 @@ import time
 class Sensor:
     '''A sensor to detect digital moles'''
 
-    def __init__(self, host, port, chance, integrity = False, integrityfunc = None):
+    def __init__(self, host, port, chance = 10, integrity = False, integrityfunc = None):
         '''Initializes the sensor to be ready to integrate with the rest of the WAM system'''
         self.fro = 'SENSOR'
         self.to = 'UI'
+        self.shutdown = False
         self.pollint = 5
         self.mole = 'NO MOLE!'
         self.host = host
@@ -25,7 +26,7 @@ class Sensor:
 
     def start(self):
         '''Starts the sensor loop of "sensing" for a digital mole'''
-        while True:
+        while not self.shutdown:
             rv = random.randint(0, 100)
             if rv <= self.mole_chance:
                 self.mole = 'MOLE!'

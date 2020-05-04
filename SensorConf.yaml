@@ -1,0 +1,11 @@
+# Hostname for the router
+router_host: 127.0.0.1
+# Message listen port
+router_port: 8081
+
+# Percent chance that a mole will be detected
+mole_chance: 10
+
+# Type of integrity protections/checking to use for validating messages to and from the router
+# Can be: {off, crc32, sha1}
+integrity: off
