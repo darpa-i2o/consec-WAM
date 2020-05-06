@@ -10,12 +10,14 @@ The distributed whack-a-mole is comprised of a few components that together allo
 4. Message router: A backend server that takes messages from all the aforementioned components and ensure the messages are valid and routes them to their intended destination.
 
 ## System requirements
-1. The UI must be updated to reflect the sensor's determination of a mole being present or not within 1 second of sensor identifying a mole
-2. The "whactuator" must receive and act upon the "whack" request from the human operator within 1 second of user input
+1. The UI must be updated to reflect the sensor's determination of a mole being present or not within 1 second of sensor identifying a mole.
+2. The "whactuator" must receive and act upon the "whack" request from the human operator within 1 second of user input.
+3. Messages exchanged between the components must be validated using the most robust integrity checking option available.
+4. Where possible, links between components should be encrypted.
 
 ## Running whack-a-mole
-1. Configure each component to interact and operate on your specific host system (ensure there are no conflicting ports, etc.)
-2. Run the `./run.sh` script and navigate your browser to the specified localhost port to bring up the UI
+1. Configure each component to interact and operate on your specific host system (ensure there are no conflicting ports, etc.).
+2. Run the `./run.sh` script and navigate your browser to the specified localhost port to bring up the UI.
 
 ## Stopping whack-a-mole
-1. Run the `./shutdown.py` script to cleanly shutdown all the server threads
+1. Run the `./shutdown.py` script to cleanly shutdown all the server threads.
