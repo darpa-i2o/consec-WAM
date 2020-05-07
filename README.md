@@ -10,7 +10,7 @@ The distributed whack-a-mole is comprised of a few components that together allo
 4. Message router: A backend server that takes messages from all the aforementioned components, ensures the messages are valid, and routes them to their intended destination.
 
 ## System requirements
-1. The UI must be updated to reflect the sensor's determination of a mole being present or not within 1 second of sensor identifying a mole.
+1. The UI must be updated to reflect the sensor's determination of a mole being present or not within 5 seconds of sensor identifying a mole.
 2. The "whactuator" must receive and act upon the "whack" request from the human operator within 1 second of user input.
 3. Messages exchanged between the components must be validated by the message router using the most robust integrity checks available.
 4. Where possible, links between components should be encrypted.
