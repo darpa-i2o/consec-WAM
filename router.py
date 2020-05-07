@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
 import wammessage
+import socketserver
+import threading
 import queue
 import yaml
+import time
+import debug
 
 CONF_FILE = "RouterConf.yaml"
 
@@ -32,6 +36,11 @@ if (conf_data['integrity'] == 'sha2'):
 
 ms = wammessage.MessageServer(mq, host = conf_data['host'], port = conf_data['message_listen_port'], integrity = msg_integrity, integrityfunc = msg_integrityfunc)
 
+if conf_data['debug']:
+    dbgd = socketserver.TCPServer((conf_data['host'], conf_data['debug_port']), debug.DebugServer)
+    dbgthread = threading.Thread(target=dbgd.serve_forever)
+    dbgthread.start()
+    
 ms.start()
 sinks = {}
 sinks['UI'] = wammessage.MessageClient(host = conf_data['ui_host'], port = conf_data['ui_port'])
@@ -39,6 +48,7 @@ sinks['WHACTUATOR'] = wammessage.MessageClient(host = conf_data['whac_host'], po
 
 while True:
     m = mq.get()
+    debug.mcount += 1
     print("Got message from: " + m.fro + " to: " + m.to + " msg: " + m.message)
     if m.message == 'SHUTDOWN':
         m.fro = 'ROUTER'
@@ -48,3 +58,5 @@ while True:
     if m.to == 'UI' or m.to == 'WHACTUATOR':
         sinks[m.to].send(m)
 
+if conf_data['debug']:
+    dbgd.shutdown()
