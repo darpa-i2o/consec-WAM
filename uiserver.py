@@ -22,6 +22,7 @@ with open(CONF_FILE) as yf:
     conf_data = yaml.load(yf)
 
 req_handler = uihandler.UIRequestHandler
+uihandler.refresh_interval = conf_data['refresh']
 recv_queue = queue.Queue()
 
 fro = 'UI'
