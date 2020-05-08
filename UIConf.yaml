@@ -15,3 +15,5 @@ cert: server.pem
 # Type of integrity protections/checking to use for validating messages to and from the router
 # Can be: {off, crc32, md5, sha1}
 integrity: crc32
+# Refresh interval for the UI page (seconds)
+refresh: 5
