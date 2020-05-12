@@ -22,3 +22,6 @@ The distributed whack-a-mole is comprised of a few components that together allo
 
 ## Stopping whack-a-mole
 1. Run the `./shutdown.py` script to cleanly shutdown all the server threads.
+
+## Distribution statement
+Statement "A" (Approved for Public Release, Distribution Unlimited)
